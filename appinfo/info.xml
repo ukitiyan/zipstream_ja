@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<info>
+    <id>zipstream_ja</id>
+    <name>Zipstream Ja</name>
+    <description>Zipstream Japanese Support</description>
+    <licence>AGPL</licence>
+    <author>Begood Technology Corp.</author>
+    <version>0.0.1</version>
+    <requiremin>7</requiremin>
+</info>
