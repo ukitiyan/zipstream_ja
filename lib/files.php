@@ -22,7 +22,7 @@
  */
 
 // TODO: get rid of this using proper composer packages
-require_once 'mcnetic/phpzipstreamer/ZipStreamer.php';
+require_once __DIR__ . '/../3rdparty/mcnetic/phpzipstreamer/ZipStreamer.php';
 
 class GET_TYPE {
 	const FILE = 1;
@@ -134,7 +134,7 @@ class OC_Files {
 					$file = $dir . '/' . $file;
 					if (\OC\Files\Filesystem::is_file($file)) {
 						$fh = \OC\Files\Filesystem::fopen($file, 'r');
-						$isJaWin ? $zip->addFileFromStream($fh,mb_convert_encoding(basename($file), 'SJIS-win', 'UTF-8')) : $zip->addFileFromStream($fh, basename($file));
+						$isJaWin ? $zip->addFileFromStream($fh,self::convertFilename(basename($file))) : $zip->addFileFromStream($fh, basename($file));
 						fclose($fh);
 					} elseif (\OC\Files\Filesystem::is_dir($file)) {
 						self::zipAddDir($file, $zip);
@@ -202,7 +202,7 @@ class OC_Files {
 		$isJaWin = (preg_match("/Win/",$_SERVER['HTTP_USER_AGENT'])) ? true : false;
 		$rootDir = $internalDir.$dirname;
 		if (!empty($rootDir)) {
-			$isJaWin ? $zip->addEmptyDir(mb_convert_encoding($rootDir, 'SJIS-win', 'UTF-8')) : $zip->addEmptyDir($rootDir);
+			$isJaWin ? $zip->addEmptyDir(self::convertFilename($rootDir)) : $zip->addEmptyDir($rootDir);
 		}
 		$internalDir.=$dirname.='/';
 		// prevent absolute dirs
@@ -214,7 +214,7 @@ class OC_Files {
 			$file=$dir.'/'.$filename;
 			if(\OC\Files\Filesystem::is_file($file)) {
 				$fh = \OC\Files\Filesystem::fopen($file, 'r');
-				$isJaWin ? $zip->addFileFromStream($fh,mb_convert_encoding($internalDir.$filename, 'SJIS-win', 'UTF-8')) :$zip->addFileFromStream($fh, $internalDir.$filename);
+				$isJaWin ? $zip->addFileFromStream($fh,self::convertFilename($internalDir.$filename)) :$zip->addFileFromStream($fh, $internalDir.$filename);
 				fclose($fh);
 			}elseif(\OC\Files\Filesystem::is_dir($file)) {
 				self::zipAddDir($file, $zip, $internalDir);
@@ -278,5 +278,9 @@ class OC_Files {
 				OC_Log::WARN);
 		}
 		return false;
+	}
+
+	private static function convertFilename($filename) {
+		return mb_convert_encoding(str_replace('\\', '/', $filename), 'sjis-win', 'UTF-8');
 	}
 }
