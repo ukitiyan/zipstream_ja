@@ -12,3 +12,5 @@
 namespace OCA\Zipstream_ja\AppInfo;
 
 \OC::$CLASSPATH['OC_Files'] = 'zipstream_ja/lib/files.php';
+
+date_default_timezone_set('Asia/Tokyo');
